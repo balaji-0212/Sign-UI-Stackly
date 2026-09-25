@@ -26,6 +26,18 @@ const CenteredAuthWrapper: React.FC<{ children: React.ReactNode }> = ({ children
   </div>
 );
 
+/**
+ * Route guard that prevents accessing completed onboarding/signup flow pages
+ * via browser history navigation, keeping the user on /welcome.
+ */
+const CompletedFlowGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const isCompleted = typeof window !== 'undefined' && sessionStorage.getItem('onboarding_completed') === 'true';
+  if (isCompleted) {
+    return <Navigate to="/welcome" replace />;
+  }
+  return <>{children}</>;
+};
+
 function App() {
   return (
     <Router>
@@ -37,19 +49,19 @@ function App() {
           {/* All auth and onboarding pages share the 50/50 AuthLayout */}
           <Route element={<AuthLayout />}>
             {/* Step 1: Sign In route from working project */}
-            <Route path="/signin" element={<SignInPage />} />
+            <Route path="/signin" element={<CompletedFlowGuard><SignInPage /></CompletedFlowGuard>} />
 
             {/* Steps 2 & 3: Organization onboarding routes */}
-            <Route path="/organization" element={<OrganizationDetailsPage />} />
-            <Route path="/organization/details" element={<OrganizationDetailsPage />} />
+            <Route path="/organization" element={<CompletedFlowGuard><OrganizationDetailsPage /></CompletedFlowGuard>} />
+            <Route path="/organization/details" element={<CompletedFlowGuard><OrganizationDetailsPage /></CompletedFlowGuard>} />
 
             {/* Step 4: Create Admin Account route from teammate project */}
-            <Route path="/admin" element={<AdminAccountPage />} />
-            <Route path="/create-admin" element={<AdminAccountPage />} />
+            <Route path="/admin" element={<CompletedFlowGuard><AdminAccountPage /></CompletedFlowGuard>} />
+            <Route path="/create-admin" element={<CompletedFlowGuard><AdminAccountPage /></CompletedFlowGuard>} />
 
             {/* Step 5: Review and Confirm route */}
-            <Route path="/review" element={<ReviewConfirm />} />
-            <Route path="/review-confirm" element={<ReviewConfirm />} />
+            <Route path="/review" element={<CompletedFlowGuard><ReviewConfirm /></CompletedFlowGuard>} />
+            <Route path="/review-confirm" element={<CompletedFlowGuard><ReviewConfirm /></CompletedFlowGuard>} />
 
             {/* Step 6: Welcome to One Enterprise route */}
             <Route path="/welcome" element={<Welcome />} />

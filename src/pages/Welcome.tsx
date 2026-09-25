@@ -21,13 +21,32 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
       mainEl.scrollTop = 0;
     }
     window.scrollTo(0, 0);
+
+    // Ensure onboarding is marked completed
+    sessionStorage.setItem('onboarding_completed', 'true');
+
+    // Push duplicate history state to trap browser Back button
+    window.history.pushState({ page: 'welcome' }, '', window.location.href);
+
+    const handlePopState = () => {
+      // Keep the user on /welcome when Back/Forward is clicked
+      window.history.pushState({ page: 'welcome' }, '', window.location.href);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
 
   const handleSignIn = () => {
+    // Clear completion state when user explicitly clicks "Go to sign in"
+    sessionStorage.removeItem('onboarding_completed');
     if (onSignIn) {
       onSignIn();
     } else {
-      navigate('/signin');
+      navigate('/signin', { replace: true });
     }
   };
 
