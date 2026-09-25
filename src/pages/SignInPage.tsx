@@ -180,15 +180,15 @@ export const SignInPage: React.FC = () => {
         <div className="flex flex-col gap-[6px] w-full min-w-0">
           <SocialLoginButton
             provider="google"
-            onClick={() => navigate('/organization')}
+            onClick={() => {}}
           />
           <SocialLoginButton
             provider="microsoft"
-            onClick={() => navigate('/organization')}
+            onClick={() => {}}
           />
           <SocialLoginButton
             provider="sso"
-            onClick={() => navigate('/organization')}
+            onClick={() => {}}
           />
         </div>
 
