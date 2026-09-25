@@ -95,10 +95,10 @@ const fieldLimits: Record<string, number> = {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-[13.5px] text-[#64748b] leading-[18px] mb-[36px]">
+        <p className="text-[13.5px] text-[#6b7280] leading-[18px] mb-[36px]">
           This is the account you&apos;ll use to manage{' '}
           {organizationName ? (
-            <strong className="font-semibold text-[#14171f]">{organizationName}</strong>
+            <strong className="font-semibold text-[#6b7280]">{organizationName}</strong>
           ) : (
             'your organization'
           )}
