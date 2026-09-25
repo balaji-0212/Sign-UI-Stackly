@@ -29,10 +29,11 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
 
     // Ensure onboarding is marked completed while on welcome page
     sessionStorage.setItem('onboarding_completed', 'true');
+    window.history.pushState({ boundary: 'welcome' }, '', window.location.href);
 
     const handlePopState = () => {
       // Keep the user on /welcome when Back/Forward is clicked while on /welcome
-      window.history.pushState(null, '', window.location.href);
+      window.history.pushState({ boundary: 'welcome' }, '', window.location.href);
     };
 
     window.addEventListener('popstate', handlePopState);

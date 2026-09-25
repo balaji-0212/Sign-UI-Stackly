@@ -102,9 +102,12 @@ export const SignInPage: React.FC = () => {
           <div className="flex flex-col w-full min-w-0">
             <label
               htmlFor="workspace-input"
-              className="text-[13px] font-medium text-[#14171f] mb-[5px] select-none"
+              className="text-[13px] font-medium text-[#14171f] mb-[5px] select-none flex items-center gap-[3px]"
             >
-              Workspace
+              <span>Workspace</span>
+              <span className="text-[#e11d48] font-semibold" aria-hidden="true">
+                *
+              </span>
             </label>
             <div
               className={`flex items-center w-full min-w-0 h-[44px] rounded-[8px] border bg-white overflow-hidden transition-colors duration-150 ${
@@ -171,6 +174,7 @@ export const SignInPage: React.FC = () => {
             <FormField
               id="work-email"
               label="Work email"
+              required
               type="email"
               inputClassName="h-[44px]"
               labelClassName="mb-[5px]"
