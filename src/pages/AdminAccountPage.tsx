@@ -54,7 +54,7 @@ export const AdminAccountPage: React.FC = () => {
     }
   };
 
-  const organizationName = organization.organizationName || 'ABC Technologies Pvt Ltd';
+  const organizationName = organization.organizationName?.trim() || '';
 
   return (
     <div className="w-full min-w-0 flex-1 flex flex-col items-center justify-start pt-8 sm:pt-[60px] lg:pt-[107px] pb-[80px] px-4 sm:px-6">
@@ -84,7 +84,13 @@ export const AdminAccountPage: React.FC = () => {
 
         {/* Subtitle */}
         <p className="text-[13.5px] text-[#64748b] leading-[18px] mb-[36px]">
-          This is the account you'll use to manage <strong>{organizationName}</strong>.
+          This is the account you&apos;ll use to manage{' '}
+          {organizationName ? (
+            <strong className="font-semibold text-[#14171f]">{organizationName}</strong>
+          ) : (
+            'your organization'
+          )}
+          .
         </p>
 
         {/* Notice Banner */}

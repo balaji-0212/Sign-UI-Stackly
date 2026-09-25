@@ -36,9 +36,11 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
     setTimeout(() => setResent(false), 4000);
   };
 
-  const organizationName = organization.organizationName?.trim() || 'ABC Technologies Pvt Ltd';
-  const rawCode = organization.organizationCode?.trim() || 'ABC-TECH';
-  const workspaceDomain = rawCode.toLowerCase().replace(/[^a-z0-9-]/g, '') + '.oneenterprise.io';
+  const organizationName = organization.organizationName?.trim() || '';
+  const rawCode = organization.organizationCode?.trim() || '';
+  const workspaceDomain = rawCode
+    ? rawCode.toLowerCase().replace(/[^a-z0-9-]/g, '') + '.oneenterprise.io'
+    : 'your-workspace.oneenterprise.io';
 
   return (
     <div className="w-full min-w-0 flex-1 flex flex-col items-center justify-center pt-8 sm:pt-[40px] lg:pt-[100px] pb-[80px] px-4 sm:px-6">
@@ -63,8 +65,12 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
 
         {/* Description */}
         <p className="text-[14.5px] leading-[22px] text-[#64748b] max-w-[480px] mb-[36px]">
-          <strong className="font-semibold">{organizationName}</strong> is ready.
-          Your Super Admin account has been created — verify your email to activate full access.
+          {organizationName ? (
+            <strong className="font-semibold">{organizationName}</strong>
+          ) : (
+            'Your organization'
+          )}{' '}
+          is ready. Your Super Admin account has been created — verify your email to activate full access.
         </p>
 
         {/* Verification Info Card */}
