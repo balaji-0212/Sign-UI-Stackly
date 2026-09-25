@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrimaryButton } from '../components/auth/PrimaryButton';
 import { DividerText } from '../components/auth/DividerText';
@@ -21,8 +21,29 @@ export const SignInPage: React.FC = () => {
   const [touched, setTouched] = useState<{ workspace?: boolean; email?: boolean }>({});
   const [showFindModal, setShowFindModal] = useState(false);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const isCompletedToSignIn = sessionStorage.getItem('flow_status') === 'completed_to_signin';
+    if (!isCompletedToSignIn) return;
+
+    // Establish /signin as boundary: push an entry so popstate can intercept browser Back
+    window.history.pushState({ boundary: 'signin' }, '', window.location.href);
+
+    const handlePopState = () => {
+      if (sessionStorage.getItem('flow_status') === 'completed_to_signin') {
+        window.history.pushState({ boundary: 'signin' }, '', window.location.href);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
   const handleWorkspaceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
+    const val = e.target.value.slice(0, 50);
     setWorkspace(val);
     if (touched.workspace) {
       setErrors((prev) => ({ ...prev, workspace: validateWorkspace(val) }));
@@ -30,7 +51,7 @@ export const SignInPage: React.FC = () => {
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
+    const val = e.target.value.slice(0, 100);
     setEmail(val);
     if (touched.email) {
       setErrors((prev) => ({ ...prev, email: validateEmail(val, 'Work email') }));
@@ -50,6 +71,8 @@ export const SignInPage: React.FC = () => {
     });
 
     if (!wsError && !emailError) {
+      sessionStorage.removeItem('flow_status');
+      sessionStorage.removeItem('onboarding_completed');
       updateOrganization({ organizationCode: workspace.toUpperCase() });
       navigate('/organization');
     }
@@ -79,9 +102,12 @@ export const SignInPage: React.FC = () => {
           <div className="flex flex-col w-full min-w-0">
             <label
               htmlFor="workspace-input"
-              className="text-[13px] font-medium text-[#14171f] mb-[5px] select-none"
+              className="text-[13px] font-medium text-[#14171f] mb-[5px] select-none flex items-center gap-[3px]"
             >
-              Workspace
+              <span>Workspace</span>
+              <span className="text-[#e11d48] font-semibold" aria-hidden="true">
+                *
+              </span>
             </label>
             <div
               className={`flex items-center w-full min-w-0 h-[44px] rounded-[8px] border bg-white overflow-hidden transition-colors duration-150 ${
@@ -94,12 +120,13 @@ export const SignInPage: React.FC = () => {
                 id="workspace-input"
                 type="text"
                 value={workspace}
+                maxLength={50}
                 onChange={handleWorkspaceChange}
                 onBlur={() => {
                   setTouched((prev) => ({ ...prev, workspace: true }));
                   setErrors((prev) => ({ ...prev, workspace: validateWorkspace(workspace) }));
                 }}
-                placeholder="acmecorp"
+                placeholder="Enter Your Workspace"
                 className="flex-1 min-w-0 h-full pl-[14px] pr-2 text-[14px] text-[#14171f] placeholder-[#a6abbb] bg-white focus:outline-none"
                 autoComplete="organization"
               />
@@ -147,9 +174,11 @@ export const SignInPage: React.FC = () => {
             <FormField
               id="work-email"
               label="Work email"
+              required
               type="email"
               inputClassName="h-[44px]"
               labelClassName="mb-[5px]"
+              maxLength={100}
               value={email}
               onChange={handleEmailChange}
               onBlur={() => {
@@ -159,7 +188,7 @@ export const SignInPage: React.FC = () => {
                   email: validateEmail(email, 'Work email'),
                 }));
               }}
-              placeholder="you@acmecorp.com"
+              placeholder="Enter Your Work Email"
               error={touched.email ? errors.email : ''}
               autoComplete="email"
             />
@@ -180,15 +209,15 @@ export const SignInPage: React.FC = () => {
         <div className="flex flex-col gap-[6px] w-full min-w-0">
           <SocialLoginButton
             provider="google"
-            onClick={() => navigate('/organization')}
+            onClick={() => {}}
           />
           <SocialLoginButton
             provider="microsoft"
-            onClick={() => navigate('/organization')}
+            onClick={() => {}}
           />
           <SocialLoginButton
             provider="sso"
-            onClick={() => navigate('/organization')}
+            onClick={() => {}}
           />
         </div>
 
@@ -200,7 +229,11 @@ export const SignInPage: React.FC = () => {
           <span>New to One Enterprise? </span>
           <button
             type="button"
-            onClick={() => navigate('/organization')}
+            onClick={() => {
+              sessionStorage.removeItem('flow_status');
+              sessionStorage.removeItem('onboarding_completed');
+              navigate('/organization');
+            }}
             className="text-[#232a5c] font-semibold hover:underline cursor-pointer focus:outline-none"
           >
             Create an account

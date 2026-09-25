@@ -14,6 +14,7 @@ interface FormFieldProps extends InputHTMLAttributes<HTMLInputElement | HTMLSele
   helperText?: ReactNode;
   isSelect?: boolean;
   options?: SelectOption[];
+  maxLength?: number;
   className?: string;
   inputClassName?: string;
   labelClassName?: string;
@@ -35,6 +36,7 @@ export const FormField: React.FC<FormFieldProps> = ({
   onChange,
   disabled = false,
   type = 'text',
+  maxLength,
   ...rest
 }) => {
   const baseInputClass = `w-full min-w-0 ${inputClassName} px-[14px] rounded-[8px] border text-[14px] text-[#14171f] placeholder-[#a6abbb] bg-white transition-colors duration-150 focus:outline-none ${
@@ -94,6 +96,7 @@ export const FormField: React.FC<FormFieldProps> = ({
           onChange={onChange as React.ChangeEventHandler<HTMLInputElement>}
           placeholder={placeholder}
           disabled={disabled}
+          maxLength={maxLength}
           aria-invalid={!!error}
           aria-describedby={error ? `${id}-error` : helperText ? `${id}-helper` : undefined}
           className={baseInputClass}

@@ -33,10 +33,12 @@ export const ReviewConfirm: React.FC<ReviewConfirmProps> = ({ onCreateAccount })
 
   const handleCreateAccount = () => {
     if (!canCreateAccount) return;
+    sessionStorage.removeItem('flow_status');
+    sessionStorage.setItem('onboarding_completed', 'true');
     if (onCreateAccount) {
       onCreateAccount();
     } else {
-      navigate('/welcome');
+      navigate('/welcome', { replace: true });
     }
   };
 

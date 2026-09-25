@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useOnboarding } from '../context/useOnboarding';
 
 export interface WelcomeProps {
@@ -15,19 +15,42 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
   const { organization, admin } = useOnboarding();
   const [resent, setResent] = useState(false);
 
+  // If user completed flow and transitioned to sign in, do not allow returning to /welcome
+  if (typeof window !== 'undefined' && sessionStorage.getItem('flow_status') === 'completed_to_signin') {
+    return <Navigate to="/signin" replace />;
+  }
+
   useEffect(() => {
     const mainEl = document.querySelector('main');
     if (mainEl) {
       mainEl.scrollTop = 0;
     }
     window.scrollTo(0, 0);
+
+    // Ensure onboarding is marked completed while on welcome page
+    sessionStorage.setItem('onboarding_completed', 'true');
+    window.history.pushState({ boundary: 'welcome' }, '', window.location.href);
+
+    const handlePopState = () => {
+      // Keep the user on /welcome when Back/Forward is clicked while on /welcome
+      window.history.pushState({ boundary: 'welcome' }, '', window.location.href);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
 
   const handleSignIn = () => {
+    // Establish /signin as the new boundary and replace /welcome from history
+    sessionStorage.removeItem('onboarding_completed');
+    sessionStorage.setItem('flow_status', 'completed_to_signin');
     if (onSignIn) {
       onSignIn();
     } else {
-      navigate('/signin');
+      navigate('/signin', { replace: true });
     }
   };
 
@@ -64,9 +87,9 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
         </h1>
 
         {/* Description */}
-        <p className="text-[14.5px] leading-[22px] text-[#64748b] max-w-[480px] mb-[36px]">
+        <p className="text-[14.5px] leading-[22px] text-[#6b7280] max-w-[480px] mb-[36px]">
           {organizationName ? (
-            <strong className="font-semibold">{organizationName}</strong>
+            <span className="font-medium text-[#4b5563]">{organizationName}</span>
           ) : (
             'Your organization'
           )}{' '}
@@ -81,11 +104,11 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
             </span>
           </div>
 
-          <p className="text-[13px] leading-[1.5] text-[#475569]">
+          <p className="text-[13px] leading-[1.5] text-[#3b4a6b]">
             We&apos;ve sent a verification link to your official email. Your
             <br />
             workspace:{' '}
-            <span className="font-mono font-semibold text-[#1e293b]">{workspaceDomain}</span>
+            <span className="font-mono font-medium text-[#3b4a6b]">{workspaceDomain}</span>
           </p>
         </div>
 

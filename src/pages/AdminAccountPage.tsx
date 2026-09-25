@@ -31,8 +31,20 @@ export const AdminAccountPage: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
+const fieldLimits: Record<string, number> = {
+  firstName: 50,
+  lastName: 50,
+  officialEmail: 100,
+  mobileNumber: 20,
+  username: 30,
+  password: 128,
+  confirmPassword: 128,
+};
+
   const setField = (field: keyof typeof values, value: string) => {
-    setValues((current) => ({ ...current, [field]: value }));
+    const limit = fieldLimits[field] || 100;
+    const truncated = value.slice(0, limit);
+    setValues((current) => ({ ...current, [field]: truncated }));
     if (errors[field]) setErrors((current) => ({ ...current, [field]: '' }));
   };
 
@@ -83,10 +95,10 @@ export const AdminAccountPage: React.FC = () => {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-[13.5px] text-[#64748b] leading-[18px] mb-[36px]">
+        <p className="text-[13.5px] text-[#6b7280] leading-[18px] mb-[36px]">
           This is the account you&apos;ll use to manage{' '}
           {organizationName ? (
-            <strong className="font-semibold text-[#14171f]">{organizationName}</strong>
+            <strong className="font-semibold text-[#6b7280]">{organizationName}</strong>
           ) : (
             'your organization'
           )}
@@ -110,20 +122,22 @@ export const AdminAccountPage: React.FC = () => {
               id="first-name"
               label="First Name"
               required
+              maxLength={50}
               value={values.firstName}
               onChange={(event) => setField('firstName', event.target.value)}
               error={errors.firstName}
-              placeholder="Ananya"
+              placeholder="Enter Your First Name"
               autoComplete="given-name"
             />
             <FormField
               id="last-name"
               label="Last Name"
               required
+              maxLength={50}
               value={values.lastName}
               onChange={(event) => setField('lastName', event.target.value)}
               error={errors.lastName}
-              placeholder="Rao"
+              placeholder="Enter Your Last Name"
               autoComplete="family-name"
             />
           </div>
@@ -133,10 +147,11 @@ export const AdminAccountPage: React.FC = () => {
             label="Official Email"
             required
             type="email"
+            maxLength={100}
             value={values.officialEmail}
             onChange={(event) => setField('officialEmail', event.target.value)}
             error={errors.officialEmail}
-            placeholder="ananya.rao@abctech.com"
+            placeholder="Enter Your Official Email"
             autoComplete="email"
           />
 
@@ -144,10 +159,11 @@ export const AdminAccountPage: React.FC = () => {
             id="mobile-number"
             label="Mobile Number"
             required
+            maxLength={20}
             value={values.mobileNumber}
             onChange={(event) => setField('mobileNumber', event.target.value)}
             error={errors.mobileNumber}
-            placeholder="+91 98765 43210"
+            placeholder="Enter Your Mobile Number"
             autoComplete="tel"
           />
 
@@ -155,10 +171,11 @@ export const AdminAccountPage: React.FC = () => {
             id="username"
             label="Username"
             required
+            maxLength={30}
             value={values.username}
             onChange={(event) => setField('username', event.target.value)}
             error={errors.username}
-            placeholder="ananya.rao"
+            placeholder="Enter Your Username"
             autoComplete="username"
           />
 
@@ -168,11 +185,12 @@ export const AdminAccountPage: React.FC = () => {
                 id="password"
                 label="Password"
                 required
+                maxLength={128}
                 type={showPassword ? 'text' : 'password'}
                 value={values.password}
                 onChange={(event) => setField('password', event.target.value)}
                 error={errors.password}
-                placeholder="Create a password"
+                placeholder="Enter Your Password"
                 inputClassName="h-[46px] pr-11"
                 autoComplete="new-password"
               />
@@ -195,11 +213,12 @@ export const AdminAccountPage: React.FC = () => {
                 id="confirm-password"
                 label="Confirm Password"
                 required
+                maxLength={128}
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={values.confirmPassword}
                 onChange={(event) => setField('confirmPassword', event.target.value)}
                 error={errors.confirmPassword}
-                placeholder="Re-enter password"
+                placeholder="Enter Your Confirm Password"
                 inputClassName="h-[46px] pr-11"
                 autoComplete="new-password"
               />
