@@ -93,10 +93,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         onClick={() => inputRef.current?.click()}
-        className={`relative w-full h-[116px] rounded-[8px] border border-dashed transition-all duration-150 flex flex-col items-center justify-center cursor-pointer select-none px-4 ${
+        className={`relative w-full h-[88px] rounded-[10px] border border-dashed transition-all duration-150 flex flex-col items-center justify-center cursor-pointer select-none px-4 ${
           isDragOver
             ? 'border-[#6378ff] bg-[#f5f7ff]'
-            : 'border-[#d6dbe3] hover:border-[#a3adb8] bg-white'
+            : 'border-[#e3e7ee] hover:border-[#cbd5e1] bg-[#fafbfc] hover:bg-[#f8fafc]'
         }`}
       >
         <input
@@ -114,7 +114,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
 
         {localPreview || value ? (
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-[6px] border border-[#e5e7eb] overflow-hidden flex items-center justify-center bg-slate-50">
+            <div className="w-11 h-11 rounded-[6px] border border-[#e5e7eb] overflow-hidden flex items-center justify-center bg-slate-50">
               <img
                 src={localPreview || ''}
                 alt="Logo preview"
@@ -141,11 +141,12 @@ export const FileUpload: React.FC<FileUploadProps> = ({
           </div>
         ) : (
           <>
-            <div className="w-[32px] h-[32px] flex items-center justify-center text-[#717684] mb-[8px]">
+            <div className="w-[28px] h-[28px] flex items-center justify-center text-[#9aa3b2] mb-[4px]">
               <Upload size={18} strokeWidth={1.5} />
             </div>
-            <div className="text-[13px] text-[#14171f] font-normal leading-tight text-center">
-              <span className="text-[#2563eb] font-medium">Upload logo</span> or drag and drop — PNG, JPG up to 5MB
+            <div className="text-[13px] leading-tight text-center">
+              <span className="text-[#2563eb] font-medium">Upload logo</span>
+              <span className="text-[#8f9bb3]"> or drag and drop — PNG, JPG up to 5MB</span>
             </div>
           </>
         )}
