@@ -72,7 +72,7 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
   const orgCodeInputRef = useRef<HTMLInputElement>(null);
 
   const [orgName, setOrgName] = useState(organization.organizationName || '');
-  const [orgCode, setOrgCode] = useState(organization.organizationCode || 'ABC-TECH');
+  const [orgCode, setOrgCode] = useState(organization.organizationCode || '');
   const [isManualCode, setIsManualCode] = useState(false);
   const [orgType, setOrgType] = useState(organization.organizationType || 'Enterprise');
   const [industry, setIndustry] = useState(organization.industry || 'Information Technology');

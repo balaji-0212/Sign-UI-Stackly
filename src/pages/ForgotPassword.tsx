@@ -27,7 +27,7 @@ export const ForgotPassword = () => {
           <TextField
             fullWidth
             placeholder="you@acmecorp.com"
-            defaultValue="you@acmecorp.com"
+            autoComplete="email"
             variant="outlined"
             sx={{
               '& .MuiOutlinedInput-root': {

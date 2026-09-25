@@ -3,25 +3,25 @@ import type { OrganizationDetails, AdminAccount } from '../types/onboarding';
 import { OnboardingContext } from './OnboardingContextValue';
 
 const initialOrganization: OrganizationDetails = {
-  organizationName: 'ABC Technologies Pvt Ltd',
-  organizationCode: 'ABC-TECH',
+  organizationName: '',
+  organizationCode: '',
   organizationType: 'Enterprise',
   industry: 'Information Technology',
   companySize: '501-1000',
   country: 'India',
   state: 'Telangana',
-  city: 'Hyderabad',
+  city: '',
   timeZone: 'Asia/Kolkata (UTC +05:30)',
   organizationLogo: null,
   logoPreviewUrl: null,
 };
 
 const initialAdmin: AdminAccount = {
-  firstName: 'Ananya',
-  lastName: 'Rao',
-  officialEmail: 'ananya.rao@abctech.com',
-  mobileNumber: '+91 98765 43210',
-  username: 'ananya.rao',
+  firstName: '',
+  lastName: '',
+  officialEmail: '',
+  mobileNumber: '',
+  username: '',
   password: '',
   confirmPassword: '',
 };

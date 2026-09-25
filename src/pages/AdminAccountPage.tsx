@@ -108,6 +108,7 @@ export const AdminAccountPage: React.FC = () => {
               onChange={(event) => setField('firstName', event.target.value)}
               error={errors.firstName}
               placeholder="Ananya"
+              autoComplete="given-name"
             />
             <FormField
               id="last-name"
@@ -117,6 +118,7 @@ export const AdminAccountPage: React.FC = () => {
               onChange={(event) => setField('lastName', event.target.value)}
               error={errors.lastName}
               placeholder="Rao"
+              autoComplete="family-name"
             />
           </div>
 
@@ -129,6 +131,7 @@ export const AdminAccountPage: React.FC = () => {
             onChange={(event) => setField('officialEmail', event.target.value)}
             error={errors.officialEmail}
             placeholder="ananya.rao@abctech.com"
+            autoComplete="email"
           />
 
           <FormField
@@ -139,6 +142,7 @@ export const AdminAccountPage: React.FC = () => {
             onChange={(event) => setField('mobileNumber', event.target.value)}
             error={errors.mobileNumber}
             placeholder="+91 98765 43210"
+            autoComplete="tel"
           />
 
           <FormField
@@ -149,6 +153,7 @@ export const AdminAccountPage: React.FC = () => {
             onChange={(event) => setField('username', event.target.value)}
             error={errors.username}
             placeholder="ananya.rao"
+            autoComplete="username"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-[16px]">
@@ -163,6 +168,7 @@ export const AdminAccountPage: React.FC = () => {
                 error={errors.password}
                 placeholder="Create a password"
                 inputClassName="h-[46px] pr-11"
+                autoComplete="new-password"
               />
               <button
                 aria-label="Show password"
@@ -189,6 +195,7 @@ export const AdminAccountPage: React.FC = () => {
                 error={errors.confirmPassword}
                 placeholder="Re-enter password"
                 inputClassName="h-[46px] pr-11"
+                autoComplete="new-password"
               />
               <button
                 aria-label="Show confirm password"

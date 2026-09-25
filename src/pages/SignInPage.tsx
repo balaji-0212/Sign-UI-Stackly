@@ -15,7 +15,7 @@ export const SignInPage: React.FC = () => {
   const navigate = useNavigate();
   const { updateOrganization } = useOnboarding();
 
-  const [workspace, setWorkspace] = useState('acmecorp');
+  const [workspace, setWorkspace] = useState('');
   const [email, setEmail] = useState('');
   const [errors, setErrors] = useState<{ workspace?: string; email?: string }>({});
   const [touched, setTouched] = useState<{ workspace?: boolean; email?: boolean }>({});
