@@ -31,8 +31,20 @@ export const AdminAccountPage: React.FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
+const fieldLimits: Record<string, number> = {
+  firstName: 50,
+  lastName: 50,
+  officialEmail: 100,
+  mobileNumber: 20,
+  username: 30,
+  password: 128,
+  confirmPassword: 128,
+};
+
   const setField = (field: keyof typeof values, value: string) => {
-    setValues((current) => ({ ...current, [field]: value }));
+    const limit = fieldLimits[field] || 100;
+    const truncated = value.slice(0, limit);
+    setValues((current) => ({ ...current, [field]: truncated }));
     if (errors[field]) setErrors((current) => ({ ...current, [field]: '' }));
   };
 
@@ -110,6 +122,7 @@ export const AdminAccountPage: React.FC = () => {
               id="first-name"
               label="First Name"
               required
+              maxLength={50}
               value={values.firstName}
               onChange={(event) => setField('firstName', event.target.value)}
               error={errors.firstName}
@@ -120,6 +133,7 @@ export const AdminAccountPage: React.FC = () => {
               id="last-name"
               label="Last Name"
               required
+              maxLength={50}
               value={values.lastName}
               onChange={(event) => setField('lastName', event.target.value)}
               error={errors.lastName}
@@ -133,6 +147,7 @@ export const AdminAccountPage: React.FC = () => {
             label="Official Email"
             required
             type="email"
+            maxLength={100}
             value={values.officialEmail}
             onChange={(event) => setField('officialEmail', event.target.value)}
             error={errors.officialEmail}
@@ -144,6 +159,7 @@ export const AdminAccountPage: React.FC = () => {
             id="mobile-number"
             label="Mobile Number"
             required
+            maxLength={20}
             value={values.mobileNumber}
             onChange={(event) => setField('mobileNumber', event.target.value)}
             error={errors.mobileNumber}
@@ -155,6 +171,7 @@ export const AdminAccountPage: React.FC = () => {
             id="username"
             label="Username"
             required
+            maxLength={30}
             value={values.username}
             onChange={(event) => setField('username', event.target.value)}
             error={errors.username}
@@ -168,6 +185,7 @@ export const AdminAccountPage: React.FC = () => {
                 id="password"
                 label="Password"
                 required
+                maxLength={128}
                 type={showPassword ? 'text' : 'password'}
                 value={values.password}
                 onChange={(event) => setField('password', event.target.value)}
@@ -195,6 +213,7 @@ export const AdminAccountPage: React.FC = () => {
                 id="confirm-password"
                 label="Confirm Password"
                 required
+                maxLength={128}
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={values.confirmPassword}
                 onChange={(event) => setField('confirmPassword', event.target.value)}

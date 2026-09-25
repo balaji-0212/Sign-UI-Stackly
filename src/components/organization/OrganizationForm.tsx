@@ -87,7 +87,7 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const handleOrgNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
+    const val = e.target.value.slice(0, 100);
     setOrgName(val);
     if (!isManualCode) {
       const generated = generateOrgCode(val);
@@ -100,7 +100,7 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
 
   const handleOrgCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsManualCode(true);
-    const val = e.target.value.toUpperCase();
+    const val = e.target.value.slice(0, 20).toUpperCase();
     setOrgCode(val);
     if (touched.orgCode) {
       setErrors((prev) => ({ ...prev, orgCode: validateRequired(val, 'Organization code') }));
@@ -215,6 +215,7 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
             id="org-name"
             label="Organization Name"
             required
+            maxLength={100}
             value={orgName}
             onChange={handleOrgNameChange}
             onBlur={() => {
@@ -246,6 +247,7 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
             id="org-code"
             type="text"
             value={orgCode}
+            maxLength={20}
             onChange={handleOrgCodeChange}
             onBlur={() => {
               setTouched((prev) => ({ ...prev, orgCode: true }));
@@ -409,11 +411,13 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
             id="city"
             label="City"
             required
+            maxLength={60}
             value={city}
             onChange={(e) => {
-              setCity(e.target.value);
+              const val = e.target.value.slice(0, 60);
+              setCity(val);
               if (touched.city) {
-                setErrors((prev) => ({ ...prev, city: validateRequired(e.target.value, 'City') }));
+                setErrors((prev) => ({ ...prev, city: validateRequired(val, 'City') }));
               }
             }}
             onBlur={() => {

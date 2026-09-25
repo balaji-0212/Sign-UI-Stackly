@@ -111,7 +111,7 @@ export const EnterPassword = () => {
             type={showPassword ? 'text' : 'password'}
             placeholder="Enter Your Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value.slice(0, 128))}
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleSignIn();
             }}
@@ -119,6 +119,9 @@ export const EnterPassword = () => {
             variant="outlined"
             autoComplete="current-password"
             slotProps={{
+              htmlInput: {
+                maxLength: 128,
+              },
               input: {
                 endAdornment: (
                   <InputAdornment position="end">

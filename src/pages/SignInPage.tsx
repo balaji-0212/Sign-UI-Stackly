@@ -43,7 +43,7 @@ export const SignInPage: React.FC = () => {
   }, []);
 
   const handleWorkspaceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
+    const val = e.target.value.slice(0, 50);
     setWorkspace(val);
     if (touched.workspace) {
       setErrors((prev) => ({ ...prev, workspace: validateWorkspace(val) }));
@@ -51,7 +51,7 @@ export const SignInPage: React.FC = () => {
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
+    const val = e.target.value.slice(0, 100);
     setEmail(val);
     if (touched.email) {
       setErrors((prev) => ({ ...prev, email: validateEmail(val, 'Work email') }));
@@ -117,6 +117,7 @@ export const SignInPage: React.FC = () => {
                 id="workspace-input"
                 type="text"
                 value={workspace}
+                maxLength={50}
                 onChange={handleWorkspaceChange}
                 onBlur={() => {
                   setTouched((prev) => ({ ...prev, workspace: true }));
@@ -173,6 +174,7 @@ export const SignInPage: React.FC = () => {
               type="email"
               inputClassName="h-[44px]"
               labelClassName="mb-[5px]"
+              maxLength={100}
               value={email}
               onChange={handleEmailChange}
               onBlur={() => {

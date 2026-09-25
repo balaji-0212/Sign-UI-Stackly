@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { TextField } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { PrimaryButton } from '../components/ui/Button';
 
 export const ForgotPassword = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
 
   return (
     <div className="flex flex-col gap-6">
@@ -26,9 +28,16 @@ export const ForgotPassword = () => {
           <label className="block text-sm font-medium text-slate-700 mb-1">Work email</label>
           <TextField
             fullWidth
+            value={email}
+            onChange={(e) => setEmail(e.target.value.slice(0, 100))}
             placeholder="Enter Your Work Email"
             autoComplete="email"
             variant="outlined"
+            slotProps={{
+              htmlInput: {
+                maxLength: 100,
+              },
+            }}
             sx={{
               '& .MuiOutlinedInput-root': {
                 borderRadius: '8px',
