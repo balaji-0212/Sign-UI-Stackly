@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
@@ -8,8 +8,68 @@ import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 // Full mountain background image covering the entire left panel
 // ==============================================================================
 
+const ROTATING_TABS = ['secure', 'scalable', 'future'] as const;
+type TabType = typeof ROTATING_TABS[number];
+
+const CYCLE_INTERVAL_MS = 3000; // ~2.5s active hold + ~500ms transition
+
 export const VisualBrandingPanel: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'secure' | 'scalable' | 'future'>('secure');
+  const [activeTab, setActiveTab] = useState<TabType>('secure');
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startAutoRotation = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
+    // Respect user's reduced-motion preference
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return;
+    }
+
+    timerRef.current = setInterval(() => {
+      setActiveTab((prevTab) => {
+        const currentIndex = ROTATING_TABS.indexOf(prevTab);
+        const nextIndex = (currentIndex + 1) % ROTATING_TABS.length;
+        return ROTATING_TABS[nextIndex];
+      });
+    }, CYCLE_INTERVAL_MS);
+  }, []);
+
+  useEffect(() => {
+    startAutoRotation();
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
+      } else {
+        startAutoRotation();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [startAutoRotation]);
+
+  const handleTabSelect = (tab: TabType) => {
+    setActiveTab(tab);
+    startAutoRotation();
+  };
 
   return (
     <div className="relative w-full h-full max-h-screen pl-8 sm:pl-10 pr-2 sm:pr-3 py-6 sm:py-8 flex flex-col justify-between overflow-hidden select-none border-r border-slate-200/70">
@@ -182,20 +242,22 @@ export const VisualBrandingPanel: React.FC = () => {
       <div className="relative z-20 pt-2 sm:pt-4">
 
         <div className="flex items-end justify-between pb-2 mb-2">
-          <div className="flex items-center gap-7 sm:gap-9 text-xs font-medium">
+          <div data-testid="bottom-branding-tabs" className="flex items-center gap-7 sm:gap-9 text-xs font-medium">
 
             <button
               type="button"
-              onClick={() => setActiveTab('secure')}
+              onClick={() => handleTabSelect('secure')}
               className="flex flex-col items-center cursor-pointer group focus:outline-none"
             >
               <div
-                className={`h-[2.5px] w-9 sm:w-10 rounded-full mb-1.5 transition-all duration-150 ${
-                  activeTab === 'secure' ? 'bg-blue-600 opacity-100' : 'bg-transparent opacity-0'
+                className={`h-[2.5px] w-9 sm:w-10 rounded-full mb-1.5 origin-center transition-all duration-500 ease-in-out ${
+                  activeTab === 'secure'
+                    ? 'bg-blue-600 opacity-100 scale-x-100'
+                    : 'bg-blue-600 opacity-0 scale-x-90 pointer-events-none'
                 }`}
               />
               <span
-                className={`font-mono text-xs tracking-wider transition ${
+                className={`font-mono text-xs tracking-wider transition-colors duration-500 ease-in-out ${
                   activeTab === 'secure'
                     ? 'text-slate-900 font-bold'
                     : 'text-slate-500 hover:text-slate-700 font-medium'
@@ -207,16 +269,18 @@ export const VisualBrandingPanel: React.FC = () => {
 
             <button
               type="button"
-              onClick={() => setActiveTab('scalable')}
+              onClick={() => handleTabSelect('scalable')}
               className="flex flex-col items-center cursor-pointer group focus:outline-none"
             >
               <div
-                className={`h-[2.5px] w-9 sm:w-10 rounded-full mb-1.5 transition-all duration-150 ${
-                  activeTab === 'scalable' ? 'bg-blue-600 opacity-100' : 'bg-transparent opacity-0'
+                className={`h-[2.5px] w-9 sm:w-10 rounded-full mb-1.5 origin-center transition-all duration-500 ease-in-out ${
+                  activeTab === 'scalable'
+                    ? 'bg-blue-600 opacity-100 scale-x-100'
+                    : 'bg-blue-600 opacity-0 scale-x-90 pointer-events-none'
                 }`}
               />
               <span
-                className={`font-mono text-xs tracking-wider transition ${
+                className={`font-mono text-xs tracking-wider transition-colors duration-500 ease-in-out ${
                   activeTab === 'scalable'
                     ? 'text-slate-900 font-bold'
                     : 'text-slate-500 hover:text-slate-700 font-medium'
@@ -228,16 +292,18 @@ export const VisualBrandingPanel: React.FC = () => {
 
             <button
               type="button"
-              onClick={() => setActiveTab('future')}
+              onClick={() => handleTabSelect('future')}
               className="flex flex-col items-center cursor-pointer group focus:outline-none"
             >
               <div
-                className={`h-[2.5px] w-9 sm:w-10 rounded-full mb-1.5 transition-all duration-150 ${
-                  activeTab === 'future' ? 'bg-blue-600 opacity-100' : 'bg-transparent opacity-0'
+                className={`h-[2.5px] w-9 sm:w-10 rounded-full mb-1.5 origin-center transition-all duration-500 ease-in-out ${
+                  activeTab === 'future'
+                    ? 'bg-blue-600 opacity-100 scale-x-100'
+                    : 'bg-blue-600 opacity-0 scale-x-90 pointer-events-none'
                 }`}
               />
               <span
-                className={`font-mono text-xs tracking-wider transition ${
+                className={`font-mono text-xs tracking-wider transition-colors duration-500 ease-in-out ${
                   activeTab === 'future'
                     ? 'text-slate-900 font-bold'
                     : 'text-slate-500 hover:text-slate-700 font-medium'
