@@ -26,7 +26,7 @@ export const ForgotPassword = () => {
           <label className="block text-sm font-medium text-slate-700 mb-1">Work email</label>
           <TextField
             fullWidth
-            placeholder="you@acmecorp.com"
+            placeholder="Enter Your Work Email"
             autoComplete="email"
             variant="outlined"
             sx={{

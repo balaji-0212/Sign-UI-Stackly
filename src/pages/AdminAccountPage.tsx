@@ -113,7 +113,7 @@ export const AdminAccountPage: React.FC = () => {
               value={values.firstName}
               onChange={(event) => setField('firstName', event.target.value)}
               error={errors.firstName}
-              placeholder="Ananya"
+              placeholder="Enter Your First Name"
               autoComplete="given-name"
             />
             <FormField
@@ -123,7 +123,7 @@ export const AdminAccountPage: React.FC = () => {
               value={values.lastName}
               onChange={(event) => setField('lastName', event.target.value)}
               error={errors.lastName}
-              placeholder="Rao"
+              placeholder="Enter Your Last Name"
               autoComplete="family-name"
             />
           </div>
@@ -136,7 +136,7 @@ export const AdminAccountPage: React.FC = () => {
             value={values.officialEmail}
             onChange={(event) => setField('officialEmail', event.target.value)}
             error={errors.officialEmail}
-            placeholder="ananya.rao@abctech.com"
+            placeholder="Enter Your Official Email"
             autoComplete="email"
           />
 
@@ -147,7 +147,7 @@ export const AdminAccountPage: React.FC = () => {
             value={values.mobileNumber}
             onChange={(event) => setField('mobileNumber', event.target.value)}
             error={errors.mobileNumber}
-            placeholder="+91 98765 43210"
+            placeholder="Enter Your Mobile Number"
             autoComplete="tel"
           />
 
@@ -158,7 +158,7 @@ export const AdminAccountPage: React.FC = () => {
             value={values.username}
             onChange={(event) => setField('username', event.target.value)}
             error={errors.username}
-            placeholder="ananya.rao"
+            placeholder="Enter Your Username"
             autoComplete="username"
           />
 
@@ -172,7 +172,7 @@ export const AdminAccountPage: React.FC = () => {
                 value={values.password}
                 onChange={(event) => setField('password', event.target.value)}
                 error={errors.password}
-                placeholder="Create a password"
+                placeholder="Enter Your Password"
                 inputClassName="h-[46px] pr-11"
                 autoComplete="new-password"
               />
@@ -199,7 +199,7 @@ export const AdminAccountPage: React.FC = () => {
                 value={values.confirmPassword}
                 onChange={(event) => setField('confirmPassword', event.target.value)}
                 error={errors.confirmPassword}
-                placeholder="Re-enter password"
+                placeholder="Enter Your Confirm Password"
                 inputClassName="h-[46px] pr-11"
                 autoComplete="new-password"
               />

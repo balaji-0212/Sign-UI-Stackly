@@ -224,7 +224,7 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
                 orgName: validateRequired(orgName, 'Organization name'),
               }));
             }}
-            placeholder="ABC Technologies Pvt Ltd"
+            placeholder="Enter Your Organization Name"
             error={touched.orgName ? errors.orgName : ''}
             autoComplete="organization"
           />
@@ -254,7 +254,7 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
                 orgCode: validateRequired(orgCode, 'Organization code'),
               }));
             }}
-            placeholder="ABC-TECH"
+            placeholder="Enter Your Organization Code"
             className={`w-full min-w-0 h-[46px] px-[14px] rounded-[8px] border text-[14px] text-[#14171f] font-mono uppercase placeholder-[#a6abbb] bg-white transition-colors duration-150 focus:outline-none ${
               errors.orgCode && touched.orgCode
                 ? 'border-red-400 focus:border-red-500 focus:ring-1 focus:ring-red-500/20'
@@ -423,7 +423,7 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
                 city: validateRequired(city, 'City'),
               }));
             }}
-            placeholder="Hyderabad"
+            placeholder="Enter Your City"
             error={touched.city ? errors.city : ''}
           />
 

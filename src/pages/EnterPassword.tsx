@@ -109,7 +109,7 @@ export const EnterPassword = () => {
           <TextField
             fullWidth
             type={showPassword ? 'text' : 'password'}
-            placeholder="Enter your password"
+            placeholder="Enter Your Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => {

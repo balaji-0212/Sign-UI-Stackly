@@ -122,7 +122,7 @@ export const SignInPage: React.FC = () => {
                   setTouched((prev) => ({ ...prev, workspace: true }));
                   setErrors((prev) => ({ ...prev, workspace: validateWorkspace(workspace) }));
                 }}
-                placeholder="acmecorp"
+                placeholder="Enter Your Workspace"
                 className="flex-1 min-w-0 h-full pl-[14px] pr-2 text-[14px] text-[#14171f] placeholder-[#a6abbb] bg-white focus:outline-none"
                 autoComplete="organization"
               />
@@ -182,7 +182,7 @@ export const SignInPage: React.FC = () => {
                   email: validateEmail(email, 'Work email'),
                 }));
               }}
-              placeholder="you@acmecorp.com"
+              placeholder="Enter Your Work Email"
               error={touched.email ? errors.email : ''}
               autoComplete="email"
             />
