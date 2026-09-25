@@ -40,7 +40,7 @@ export const ReviewConfirm: React.FC<ReviewConfirmProps> = ({ onCreateAccount })
     }
   };
 
-  const organizationName = organization.organizationName?.trim() || 'ABC Technologies Pvt Ltd';
+  const organizationName = organization.organizationName?.trim() || '';
 
   return (
     <div className="w-full min-w-0 flex-1 flex flex-col items-center justify-start pt-8 sm:pt-[60px] lg:pt-[107px] pb-[80px] px-4 sm:px-6">
@@ -71,7 +71,13 @@ export const ReviewConfirm: React.FC<ReviewConfirmProps> = ({ onCreateAccount })
         {/* Subtitle */}
         <p className="text-[14px] text-[#64748b] leading-[20px] mb-[28px]">
           One last step before we create{' '}
-          <strong className="font-semibold">{organizationName}&apos;s</strong>{' '}
+          {organizationName ? (
+            <>
+              <strong className="font-semibold">{organizationName}&apos;s</strong>{' '}
+            </>
+          ) : (
+            'your '
+          )}
           workspace.
         </p>
 
@@ -95,8 +101,12 @@ export const ReviewConfirm: React.FC<ReviewConfirmProps> = ({ onCreateAccount })
               onChange={setAuthorizationAccepted}
             >
               I confirm that I am authorized to register{' '}
-              <strong className="font-semibold">{organizationName}</strong> on One
-              Enterprise, and I accept responsibility as its Super Administrator.
+              {organizationName ? (
+                <strong className="font-semibold">{organizationName}</strong>
+              ) : (
+                'the organization'
+              )}{' '}
+              on One Enterprise, and I accept responsibility as its Super Administrator.
             </AgreementCheckbox>
 
             <AgreementCheckbox

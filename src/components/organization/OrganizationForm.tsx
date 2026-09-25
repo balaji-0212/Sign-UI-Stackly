@@ -74,15 +74,13 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
   const [orgName, setOrgName] = useState(organization.organizationName || '');
   const [orgCode, setOrgCode] = useState(organization.organizationCode || '');
   const [isManualCode, setIsManualCode] = useState(false);
-  const [orgType, setOrgType] = useState(organization.organizationType || 'Enterprise');
-  const [industry, setIndustry] = useState(organization.industry || 'Information Technology');
-  const [companySize, setCompanySize] = useState(organization.companySize || '501-1000');
-  const [country, setCountry] = useState(organization.country || 'India');
-  const [stateProvince, setStateProvince] = useState(organization.state || 'Telangana');
+  const [orgType, setOrgType] = useState(organization.organizationType || '');
+  const [industry, setIndustry] = useState(organization.industry || '');
+  const [companySize, setCompanySize] = useState(organization.companySize || '');
+  const [country, setCountry] = useState(organization.country || '');
+  const [stateProvince, setStateProvince] = useState(organization.state || '');
   const [city, setCity] = useState(organization.city || '');
-  const [timeZone, setTimeZone] = useState(
-    organization.timeZone || 'Asia/Kolkata (UTC +05:30)'
-  );
+  const [timeZone, setTimeZone] = useState(organization.timeZone || '');
   const [logoFile, setLogoFile] = useState<File | null>(organization.organizationLogo || null);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -93,7 +91,7 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
     setOrgName(val);
     if (!isManualCode) {
       const generated = generateOrgCode(val);
-      if (generated) setOrgCode(generated);
+      setOrgCode(generated);
     }
     if (touched.orgName) {
       setErrors((prev) => ({ ...prev, orgName: validateRequired(val, 'Organization name') }));
@@ -112,8 +110,10 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
   const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCountry = e.target.value;
     setCountry(newCountry);
-    const availableStates = statesByCountry[newCountry] || [];
-    setStateProvince(availableStates.length > 0 ? availableStates[0].value : '');
+    setStateProvince('');
+    if (touched.country) {
+      setErrors((prev) => ({ ...prev, country: validateRequired(newCountry, 'Country') }));
+    }
   };
 
   const validateAll = () => {
@@ -123,6 +123,21 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
 
     const codeErr = validateRequired(orgCode, 'Organization code');
     if (codeErr) newErrors.orgCode = codeErr;
+
+    const typeErr = validateRequired(orgType, 'Organization type');
+    if (typeErr) newErrors.orgType = typeErr;
+
+    const indErr = validateRequired(industry, 'Industry');
+    if (indErr) newErrors.industry = indErr;
+
+    const sizeErr = validateRequired(companySize, 'Company size');
+    if (sizeErr) newErrors.companySize = sizeErr;
+
+    const countryErr = validateRequired(country, 'Country');
+    if (countryErr) newErrors.country = countryErr;
+
+    const stateErr = validateRequired(stateProvince, 'State / Province');
+    if (stateErr) newErrors.stateProvince = stateErr;
 
     const cityErr = validateRequired(city, 'City');
     if (cityErr) newErrors.city = cityErr;
@@ -134,6 +149,11 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
     setTouched({
       orgName: true,
       orgCode: true,
+      orgType: true,
+      industry: true,
+      companySize: true,
+      country: true,
+      stateProvince: true,
       city: true,
       timeZone: true,
     });
@@ -270,7 +290,14 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
             required
             isSelect
             value={orgType}
-            onChange={(e) => setOrgType(e.target.value)}
+            onChange={(e) => {
+              setOrgType(e.target.value);
+              if (touched.orgType) {
+                setErrors((prev) => ({ ...prev, orgType: validateRequired(e.target.value, 'Organization type') }));
+              }
+            }}
+            placeholder="Select organization type"
+            error={touched.orgType ? errors.orgType : ''}
             options={[
               { value: 'Enterprise', label: 'Enterprise' },
               { value: 'Mid-Market', label: 'Mid-Market' },
@@ -290,7 +317,14 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
             required
             isSelect
             value={industry}
-            onChange={(e) => setIndustry(e.target.value)}
+            onChange={(e) => {
+              setIndustry(e.target.value);
+              if (touched.industry) {
+                setErrors((prev) => ({ ...prev, industry: validateRequired(e.target.value, 'Industry') }));
+              }
+            }}
+            placeholder="Select industry"
+            error={touched.industry ? errors.industry : ''}
             options={[
               { value: 'Information Technology', label: 'Information Technology' },
               { value: 'Financial Services', label: 'Financial Services' },
@@ -311,7 +345,14 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
             required
             isSelect
             value={companySize}
-            onChange={(e) => setCompanySize(e.target.value)}
+            onChange={(e) => {
+              setCompanySize(e.target.value);
+              if (touched.companySize) {
+                setErrors((prev) => ({ ...prev, companySize: validateRequired(e.target.value, 'Company size') }));
+              }
+            }}
+            placeholder="Select company size"
+            error={touched.companySize ? errors.companySize : ''}
             options={[
               { value: '1-50', label: '1-50 employees' },
               { value: '51-200', label: '51-200 employees' },
@@ -332,6 +373,8 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
             isSelect
             value={country}
             onChange={handleCountryChange}
+            placeholder="Select country"
+            error={touched.country ? errors.country : ''}
             options={[
               { value: 'India', label: 'India' },
               { value: 'United States', label: 'United States' },
@@ -348,8 +391,15 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
             required
             isSelect
             value={stateProvince}
-            onChange={(e) => setStateProvince(e.target.value)}
-            options={statesByCountry[country] || []}
+            onChange={(e) => {
+              setStateProvince(e.target.value);
+              if (touched.stateProvince) {
+                setErrors((prev) => ({ ...prev, stateProvince: validateRequired(e.target.value, 'State / Province') }));
+              }
+            }}
+            placeholder="Select state / province"
+            error={touched.stateProvince ? errors.stateProvince : ''}
+            options={country ? statesByCountry[country] || [] : []}
           />
         </div>
 
@@ -389,6 +439,7 @@ export const OrganizationForm: React.FC<OrganizationFormProps> = ({
                 setErrors((prev) => ({ ...prev, timeZone: validateRequired(e.target.value, 'Time Zone') }));
               }
             }}
+            placeholder="Select time zone"
             options={[
               { value: 'Asia/Kolkata (UTC +05:30)', label: 'Asia/Kolkata (UTC +05:30)' },
               { value: 'America/New_York (UTC -05:00)', label: 'America/New_York (UTC -05:00)' },
