@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { useOnboarding } from '../context/useOnboarding';
 
 export interface WelcomeProps {
@@ -15,6 +15,11 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
   const { organization, admin } = useOnboarding();
   const [resent, setResent] = useState(false);
 
+  // If user completed flow and transitioned to sign in, do not allow returning to /welcome
+  if (typeof window !== 'undefined' && sessionStorage.getItem('flow_status') === 'completed_to_signin') {
+    return <Navigate to="/signin" replace />;
+  }
+
   useEffect(() => {
     const mainEl = document.querySelector('main');
     if (mainEl) {
@@ -22,15 +27,12 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
     }
     window.scrollTo(0, 0);
 
-    // Ensure onboarding is marked completed
+    // Ensure onboarding is marked completed while on welcome page
     sessionStorage.setItem('onboarding_completed', 'true');
 
-    // Push duplicate history state to trap browser Back button
-    window.history.pushState({ page: 'welcome' }, '', window.location.href);
-
     const handlePopState = () => {
-      // Keep the user on /welcome when Back/Forward is clicked
-      window.history.pushState({ page: 'welcome' }, '', window.location.href);
+      // Keep the user on /welcome when Back/Forward is clicked while on /welcome
+      window.history.pushState(null, '', window.location.href);
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -41,8 +43,9 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
   }, []);
 
   const handleSignIn = () => {
-    // Clear completion state when user explicitly clicks "Go to sign in"
+    // Establish /signin as the new boundary and replace /welcome from history
     sessionStorage.removeItem('onboarding_completed');
+    sessionStorage.setItem('flow_status', 'completed_to_signin');
     if (onSignIn) {
       onSignIn();
     } else {

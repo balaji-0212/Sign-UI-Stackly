@@ -27,10 +27,28 @@ const CenteredAuthWrapper: React.FC<{ children: React.ReactNode }> = ({ children
 );
 
 /**
- * Route guard that prevents accessing completed onboarding/signup flow pages
- * via browser history navigation, keeping the user on /welcome.
+ * Route guard for completed onboarding pages (/organization, /admin, /review)
+ * - If onboarding is completed and user is on /welcome, keeps them from going back to onboarding.
+ * - If user clicked 'Go to sign in' (flow_status === 'completed_to_signin'), prevents going back
+ *   into the completed onboarding flow and redirects to /signin.
  */
-const CompletedFlowGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const OnboardingFlowGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const isCompleted = typeof window !== 'undefined' && sessionStorage.getItem('onboarding_completed') === 'true';
+  const isCompletedToSignIn = typeof window !== 'undefined' && sessionStorage.getItem('flow_status') === 'completed_to_signin';
+  if (isCompleted) {
+    return <Navigate to="/welcome" replace />;
+  }
+  if (isCompletedToSignIn) {
+    return <Navigate to="/signin" replace />;
+  }
+  return <>{children}</>;
+};
+
+/**
+ * Route guard for /signin
+ * - If onboarding is completed and user hasn't yet clicked 'Go to sign in', redirects to /welcome.
+ */
+const SignInGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const isCompleted = typeof window !== 'undefined' && sessionStorage.getItem('onboarding_completed') === 'true';
   if (isCompleted) {
     return <Navigate to="/welcome" replace />;
@@ -49,19 +67,19 @@ function App() {
           {/* All auth and onboarding pages share the 50/50 AuthLayout */}
           <Route element={<AuthLayout />}>
             {/* Step 1: Sign In route from working project */}
-            <Route path="/signin" element={<CompletedFlowGuard><SignInPage /></CompletedFlowGuard>} />
+            <Route path="/signin" element={<SignInGuard><SignInPage /></SignInGuard>} />
 
             {/* Steps 2 & 3: Organization onboarding routes */}
-            <Route path="/organization" element={<CompletedFlowGuard><OrganizationDetailsPage /></CompletedFlowGuard>} />
-            <Route path="/organization/details" element={<CompletedFlowGuard><OrganizationDetailsPage /></CompletedFlowGuard>} />
+            <Route path="/organization" element={<OnboardingFlowGuard><OrganizationDetailsPage /></OnboardingFlowGuard>} />
+            <Route path="/organization/details" element={<OnboardingFlowGuard><OrganizationDetailsPage /></OnboardingFlowGuard>} />
 
             {/* Step 4: Create Admin Account route from teammate project */}
-            <Route path="/admin" element={<CompletedFlowGuard><AdminAccountPage /></CompletedFlowGuard>} />
-            <Route path="/create-admin" element={<CompletedFlowGuard><AdminAccountPage /></CompletedFlowGuard>} />
+            <Route path="/admin" element={<OnboardingFlowGuard><AdminAccountPage /></OnboardingFlowGuard>} />
+            <Route path="/create-admin" element={<OnboardingFlowGuard><AdminAccountPage /></OnboardingFlowGuard>} />
 
             {/* Step 5: Review and Confirm route */}
-            <Route path="/review" element={<CompletedFlowGuard><ReviewConfirm /></CompletedFlowGuard>} />
-            <Route path="/review-confirm" element={<CompletedFlowGuard><ReviewConfirm /></CompletedFlowGuard>} />
+            <Route path="/review" element={<OnboardingFlowGuard><ReviewConfirm /></OnboardingFlowGuard>} />
+            <Route path="/review-confirm" element={<OnboardingFlowGuard><ReviewConfirm /></OnboardingFlowGuard>} />
 
             {/* Step 6: Welcome to One Enterprise route */}
             <Route path="/welcome" element={<Welcome />} />

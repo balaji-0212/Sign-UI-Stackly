@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrimaryButton } from '../components/auth/PrimaryButton';
 import { DividerText } from '../components/auth/DividerText';
@@ -20,6 +20,27 @@ export const SignInPage: React.FC = () => {
   const [errors, setErrors] = useState<{ workspace?: string; email?: string }>({});
   const [touched, setTouched] = useState<{ workspace?: boolean; email?: boolean }>({});
   const [showFindModal, setShowFindModal] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const isCompletedToSignIn = sessionStorage.getItem('flow_status') === 'completed_to_signin';
+    if (!isCompletedToSignIn) return;
+
+    // Establish /signin as boundary: push an entry so popstate can intercept browser Back
+    window.history.pushState({ boundary: 'signin' }, '', window.location.href);
+
+    const handlePopState = () => {
+      if (sessionStorage.getItem('flow_status') === 'completed_to_signin') {
+        window.history.pushState({ boundary: 'signin' }, '', window.location.href);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
 
   const handleWorkspaceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -50,6 +71,8 @@ export const SignInPage: React.FC = () => {
     });
 
     if (!wsError && !emailError) {
+      sessionStorage.removeItem('flow_status');
+      sessionStorage.removeItem('onboarding_completed');
       updateOrganization({ organizationCode: workspace.toUpperCase() });
       navigate('/organization');
     }
@@ -200,7 +223,11 @@ export const SignInPage: React.FC = () => {
           <span>New to One Enterprise? </span>
           <button
             type="button"
-            onClick={() => navigate('/organization')}
+            onClick={() => {
+              sessionStorage.removeItem('flow_status');
+              sessionStorage.removeItem('onboarding_completed');
+              navigate('/organization');
+            }}
             className="text-[#232a5c] font-semibold hover:underline cursor-pointer focus:outline-none"
           >
             Create an account
