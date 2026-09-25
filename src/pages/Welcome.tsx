@@ -86,9 +86,9 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
         </h1>
 
         {/* Description */}
-        <p className="text-[14.5px] leading-[22px] text-[#64748b] max-w-[480px] mb-[36px]">
+        <p className="text-[14.5px] leading-[22px] text-[#6b7280] max-w-[480px] mb-[36px]">
           {organizationName ? (
-            <strong className="font-semibold">{organizationName}</strong>
+            <span className="font-medium text-[#4b5563]">{organizationName}</span>
           ) : (
             'Your organization'
           )}{' '}
@@ -103,11 +103,11 @@ export const Welcome: React.FC<WelcomeProps> = ({ onSignIn }) => {
             </span>
           </div>
 
-          <p className="text-[13px] leading-[1.5] text-[#475569]">
+          <p className="text-[13px] leading-[1.5] text-[#3b4a6b]">
             We&apos;ve sent a verification link to your official email. Your
             <br />
             workspace:{' '}
-            <span className="font-mono font-semibold text-[#1e293b]">{workspaceDomain}</span>
+            <span className="font-mono font-medium text-[#3b4a6b]">{workspaceDomain}</span>
           </p>
         </div>
 
